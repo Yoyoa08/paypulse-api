@@ -1,10 +1,10 @@
 from dotenv import load_dotenv
-load_dotenv()  # 1. Load environment keys first
+load_dotenv()  
 
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from app.database import engine, Base
-import app.models  # 2. CRITICAL: Registers models with SQLAlchemy metadata so tables get created!
+import app.models  
 from app.routers import orders, webhooks  
 
 @asynccontextmanager
