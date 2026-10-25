@@ -1,14 +1,23 @@
+from dotenv import load_dotenv
+load_dotenv()  # 1. Load environment keys first
+
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from app.database import engine, Base
-from app.models import Order  # Imports the model so SQLAlchemy registers it
+import app.models  # 2. CRITICAL: Registers models with SQLAlchemy metadata so tables get created!
+from app.routers import orders, webhooks  
 
-app = FastAPI(title="PayPulse API")
-
-@app.on_event("startup")
-async def startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
-        # This creates your tables in PostgreSQL automatically
         await conn.run_sync(Base.metadata.create_all)
+    yield
+
+
+app = FastAPI(title="PayPulse API", lifespan=lifespan)
+
+app.include_router(orders.router)
+app.include_router(webhooks.router)
 
 @app.get("/")
 async def root():
@@ -17,3 +26,5 @@ async def root():
 @app.get("/health")
 async def health_check():
     return {"status": "healthy", "service": "paypulse-api"}
+
+#uvicorn app.main:app --reload
