@@ -28,3 +28,4 @@ async def health_check():
     return {"status": "healthy", "service": "paypulse-api"}
 
 #uvicorn app.main:app --reload
+

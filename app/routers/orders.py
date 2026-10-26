@@ -23,10 +23,10 @@ async def create_order(order_in: OrderCreate, db: AsyncSession = Depends(get_db)
     await db.refresh(db_order)
     return db_order
 
-
 @router.post("/{order_id}/checkout")
 async def checkout_order(order_id: UUID, db: AsyncSession = Depends(get_db)):
-   
+    print(f"--> Incoming checkout request for Order ID: {order_id}")
+    
     db_order = await db.get(Order, order_id)
     if not db_order:
         raise HTTPException(
@@ -42,7 +42,6 @@ async def checkout_order(order_id: UUID, db: AsyncSession = Depends(get_db)):
             currency=db_order.currency,
             customer_email=db_order.customer_email
         )
-        
         return session_data
 
     except ValueError as e:
