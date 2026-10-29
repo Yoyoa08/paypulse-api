@@ -13,9 +13,7 @@ async def create_stripe_checkout_session(
     currency: str,
     customer_email: str
 ):
-    """
-    Creates a Stripe Checkout Session for the given order.
-    """
+   
     try:
         checkout_session = stripe.checkout.Session.create(
             metadata={
@@ -28,7 +26,7 @@ async def create_stripe_checkout_session(
                         "product_data": {
                             "name": f"PayPulse Order #{order_id}",
                         },
-                        
+
                         "unit_amount": int(float(amount) * 100),
                     },
                     "quantity": 1,
@@ -40,10 +38,7 @@ async def create_stripe_checkout_session(
             cancel_url="https://example.com/cancel",
         )
 
-        return {
-            "checkout_url": checkout_session.url,
-            "session_id": checkout_session.id
-        }
+        return {"checkout_url": checkout_session.url, "session_id": checkout_session.id}
 
     except stripe.error.StripeError as e:
         raise ValueError(f"Stripe API Error: {e.user_message}")
