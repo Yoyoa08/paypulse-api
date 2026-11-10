@@ -34,3 +34,15 @@ class Order(Base):
         onupdate=lambda: datetime.now(timezone.utc), 
         nullable=False
     )
+
+
+class ProcessedWebhookEvent(Base):
+    __tablename__ = "processed_webhook_events"
+
+    event_id = Column(String, primary_key=True, index=True)
+    processed_at = Column(
+        DateTime(timezone=True), 
+        default=lambda: datetime.now(timezone.utc), 
+        nullable=False
+    )
+

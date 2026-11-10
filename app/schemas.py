@@ -9,7 +9,6 @@ class OrderCreate(BaseModel):
     currency: str = "USD"
     email: EmailStr
 
-
 class OrderResponse(BaseModel):
     id: UUID
     provider_reference: str | None = None

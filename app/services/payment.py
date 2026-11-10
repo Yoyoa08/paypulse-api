@@ -1,9 +1,9 @@
-import os
 import stripe
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models import Order
+from app.config import settings  
 
-stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
+stripe.api_key = settings.STRIPE_SECRET_KEY  
 
 
 async def create_stripe_checkout_session(
@@ -13,7 +13,6 @@ async def create_stripe_checkout_session(
     currency: str,
     customer_email: str
 ):
-   
     try:
         checkout_session = stripe.checkout.Session.create(
             metadata={
@@ -26,7 +25,6 @@ async def create_stripe_checkout_session(
                         "product_data": {
                             "name": f"PayPulse Order #{order_id}",
                         },
-
                         "unit_amount": int(float(amount) * 100),
                     },
                     "quantity": 1,
